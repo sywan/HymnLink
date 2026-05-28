@@ -6,6 +6,7 @@ __pycache__
 .env
 .env.local
 data/seed.json
+data/*.json
 ~$*
 docs/~$*
 *.tsbuildinfo
