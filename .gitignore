@@ -1,0 +1,7 @@
+.next
+node_modules
+.npm-cache
+.env
+.env.local
+data/seed.json
+*.tsbuildinfo

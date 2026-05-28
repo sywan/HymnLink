@@ -1,0 +1,22 @@
+export function requireLoginToView() {
+  return process.env.REQUIRE_LOGIN_TO_VIEW !== "false" && hasAuthProviders();
+}
+
+export function hasSheetsConfig() {
+  return Boolean(
+    process.env.GOOGLE_SHEETS_ID &&
+      process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL &&
+      process.env.GOOGLE_PRIVATE_KEY
+  );
+}
+
+export function hasAuthProviders() {
+  return Boolean(
+    (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) ||
+      (process.env.GITHUB_ID && process.env.GITHUB_SECRET)
+  );
+}
+
+export function getPrivateKey() {
+  return process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+}

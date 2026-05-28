@@ -1,0 +1,33 @@
+{
+  "name": "hymnlink",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate:seed": "node scripts/generate-seed.mjs"
+  },
+  "dependencies": {
+    "@auth/core": "^0.34.2",
+    "@googleapis/sheets": "^9.3.1",
+    "clsx": "^2.1.1",
+    "google-auth-library": "^9.15.0",
+    "lucide-react": "^0.468.0",
+    "next": "^14.2.23",
+    "next-auth": "^4.24.11",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "xlsx": "^0.18.5",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.23",
+    "typescript": "^5.7.2"
+  }
+}
