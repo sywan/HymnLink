@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import XLSX from "xlsx";
 
-const workbookPath = path.resolve("HymnLink_data_blank.xlsx");
+const workbookPath = path.resolve("docs/HymnLink_data.xlsx");
 const outPath = path.resolve("data/seed.json");
 
 if (!fs.existsSync(workbookPath)) {

@@ -10,7 +10,7 @@ This first build is designed for a free-tier, low-maintenance setup:
 - Next.js app deployable on Vercel free tier.
 - Google Sheets as the single source of truth for `Hymns`, `Categories`, `Admins`, and `ChangeLog`.
 - Google / GitHub OAuth through NextAuth.
-- Local Excel seed mode from `HymnLink_data_blank.xlsx` for development before cloud credentials are ready.
+- Local Excel seed mode from `docs/HymnLink_data.xlsx` for development before cloud credentials are ready.
 
 ## Local Development
 
@@ -44,7 +44,7 @@ Share the Google Sheet with the service account email as an editor.
 
 ## Spreadsheet Contract
 
-The app expects the workbook tabs and headers from `HymnLink_data_blank.xlsx`:
+The app expects the workbook tabs and headers from `docs/HymnLink_data.xlsx`:
 
 - `Hymns`: hymn catalog
 - `Categories`: category vocabulary
@@ -55,7 +55,7 @@ Admin permissions are granted only when an authenticated user's email appears in
 
 ## Deployment
 
-1. Upload `HymnLink_data_blank.xlsx` to Google Drive and convert it to Google Sheets.
+1. Upload `docs/HymnLink_data.xlsx` to Google Drive and convert it to Google Sheets.
 2. Enable Google Sheets API in Google Cloud.
 3. Create a service account and share the Sheet with the service account email.
 4. Create Google OAuth credentials and add the Vercel callback URL:

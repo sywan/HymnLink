@@ -1,7 +1,11 @@
 .next
 node_modules
 .npm-cache
+__pycache__
+*.pyc
 .env
 .env.local
 data/seed.json
+~$*
+docs/~$*
 *.tsbuildinfo
