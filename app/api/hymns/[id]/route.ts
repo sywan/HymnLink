@@ -1,9 +1,13 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
+import { requireViewerSession } from "@/lib/session";
 import { deleteHymn, getHymn, isAdmin } from "@/lib/sheets";
 
 export async function GET(_request: Request, { params }: { params: { id: string } }) {
+  const viewer = await requireViewerSession();
+  if (viewer.response) return viewer.response;
+
   const hymn = await getHymn(params.id);
   if (!hymn) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });

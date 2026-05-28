@@ -8,7 +8,7 @@ import { getCategories, getHymn, isAdmin } from "@/lib/sheets";
 export default async function AdminHymnEditPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
   const allowed = await isAdmin(session?.user?.email);
-  if (!allowed) redirect("/api/auth/signin");
+  if (!allowed) redirect(session ? "/auth/error?error=AccessDenied" : "/api/auth/signin");
 
   const [hymn, categories] = await Promise.all([getHymn(params.id), getCategories()]);
   if (!hymn) notFound();

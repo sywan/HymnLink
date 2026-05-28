@@ -1,10 +1,14 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "@/lib/auth";
+import { requireViewerSession } from "@/lib/session";
 import { getHymns, isAdmin, upsertHymn } from "@/lib/sheets";
 import { hymnInputSchema } from "@/lib/validators";
 
 export async function GET() {
+  const viewer = await requireViewerSession();
+  if (viewer.response) return viewer.response;
+
   return NextResponse.json({ hymns: await getHymns() });
 }
 

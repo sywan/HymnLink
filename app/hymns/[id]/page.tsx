@@ -3,7 +3,7 @@ import { ArrowLeft, Edit3, ExternalLink, Music } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { requireLoginToView } from "@/lib/config";
-import { getCategories, getHymn, isAdmin } from "@/lib/sheets";
+import { getCategories, getHymn, isAdmin, isAuthorizedUser } from "@/lib/sheets";
 import { formatEscapedText } from "@/lib/text";
 import { getYouTubeEmbedUrl, joinSheetMusicUrl } from "@/lib/youtube";
 
@@ -16,8 +16,15 @@ function splitTokens(value: string) {
 
 export default async function HymnDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions);
-  if (requireLoginToView() && !session) {
-    redirect("/api/auth/signin");
+  const loginRequired = requireLoginToView();
+
+  if (loginRequired) {
+    if (!session?.user?.email) {
+      redirect("/api/auth/signin");
+    }
+    if (!(await isAuthorizedUser(session.user.email))) {
+      redirect("/auth/error?error=AccessDenied");
+    }
   }
 
   const [hymn, categories, allowedToEdit] = await Promise.all([

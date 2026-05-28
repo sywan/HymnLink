@@ -442,6 +442,49 @@ textarea {
   padding: 7px 10px;
 }
 
+.authPanel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 14px;
+  margin: 68px auto;
+  max-width: 560px;
+  padding: 28px;
+  text-align: center;
+}
+
+.authPanel h1 {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  margin: 0;
+}
+
+.authPanel p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.authIcon {
+  align-items: center;
+  background: var(--accent-soft);
+  border-radius: 999px;
+  color: var(--accent);
+  display: inline-flex;
+  height: 56px;
+  justify-content: center;
+  justify-self: center;
+  width: 56px;
+}
+
+.buttonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
 @media (max-width: 900px) {
   .toolbar,
   .detailLayout,

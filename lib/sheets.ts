@@ -4,6 +4,8 @@ import { getPrivateKey, hasSheetsConfig } from "@/lib/config";
 import { loadSeedData } from "@/lib/seed";
 import { HYMN_HEADERS, type AdminRecord, type Category, type Hymn, type HymnInput } from "@/lib/types";
 
+export type AccessRole = "admin" | "user";
+
 const CATEGORIES_HEADERS: (keyof Category)[] = ["code", "name_zh", "name_en"];
 const ADMINS_HEADERS: (keyof AdminRecord)[] = ["email", "role", "display_name"];
 
@@ -19,13 +21,24 @@ function recordToRow<T extends Record<string, string>>(headers: readonly (keyof 
 }
 
 async function getSheetsClient() {
-  const auth = new GoogleAuth({
-    credentials: {
-      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: getPrivateKey()
-    },
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"]
-  });
+  const scopes = ["https://www.googleapis.com/auth/spreadsheets"];
+  const serviceAccountEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const privateKey = getPrivateKey();
+
+  if ((serviceAccountEmail && !privateKey) || (!serviceAccountEmail && privateKey)) {
+    throw new Error("GOOGLE_SERVICE_ACCOUNT_EMAIL and GOOGLE_PRIVATE_KEY must be configured together.");
+  }
+
+  const auth =
+    serviceAccountEmail && privateKey
+      ? new GoogleAuth({
+          credentials: {
+            client_email: serviceAccountEmail,
+            private_key: privateKey
+          },
+          scopes
+        })
+      : new GoogleAuth({ scopes });
 
   return sheets({ version: "v4", auth });
 }
@@ -97,10 +110,24 @@ export async function getHymn(id: string) {
   return (await getHymns()).find((hymn) => hymn.id === id);
 }
 
-export async function isAdmin(email?: string | null) {
-  if (!email) return false;
+function normalizeRole(role?: string | null): AccessRole | null {
+  const normalized = role?.trim().toLowerCase();
+  return normalized === "admin" || normalized === "user" ? normalized : null;
+}
+
+export async function getAccessRole(email?: string | null): Promise<AccessRole | null> {
+  if (!email) return null;
   const admins = await getAdmins();
-  return admins.some((admin) => admin.email.toLowerCase() === email.toLowerCase() && admin.role === "admin");
+  const record = admins.find((admin) => admin.email.toLowerCase() === email.toLowerCase());
+  return normalizeRole(record?.role);
+}
+
+export async function isAuthorizedUser(email?: string | null) {
+  return Boolean(await getAccessRole(email));
+}
+
+export async function isAdmin(email?: string | null) {
+  return (await getAccessRole(email)) === "admin";
 }
 
 export async function upsertHymn(input: HymnInput, actorEmail: string) {

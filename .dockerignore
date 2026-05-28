@@ -1,0 +1,13 @@
+.DS_Store
+.env
+.env.*
+.git
+.github
+.next
+.npm-cache
+data/seed.json
+node_modules
+npm-debug.log*
+README.local.md
+docs/*.csv
+docs/*.xlsx
