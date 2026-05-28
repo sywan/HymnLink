@@ -1,9 +1,10 @@
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeft, ExternalLink, Music } from "lucide-react";
+import { ArrowLeft, Edit3, ExternalLink, Music } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { requireLoginToView } from "@/lib/config";
-import { getCategories, getHymn } from "@/lib/sheets";
+import { getCategories, getHymn, isAdmin } from "@/lib/sheets";
+import { formatEscapedText } from "@/lib/text";
 import { getYouTubeEmbedUrl, joinSheetMusicUrl } from "@/lib/youtube";
 
 function splitTokens(value: string) {
@@ -19,11 +20,16 @@ export default async function HymnDetailPage({ params }: { params: { id: string 
     redirect("/api/auth/signin");
   }
 
-  const [hymn, categories] = await Promise.all([getHymn(params.id), getCategories()]);
+  const [hymn, categories, allowedToEdit] = await Promise.all([
+    getHymn(params.id),
+    getCategories(),
+    isAdmin(session?.user?.email)
+  ]);
   if (!hymn) notFound();
 
   const embedUrl = getYouTubeEmbedUrl(hymn.youtube_url);
   const sheetMusicUrl = joinSheetMusicUrl(hymn.sheet_music_base, hymn.sheet_music_path);
+  const lyrics = formatEscapedText(hymn.lyrics);
   const categoryLabels = splitTokens(hymn.categories).map((code) => {
     const category = categories.find((item) => item.code === code);
     return category?.name_zh || category?.name_en || code;
@@ -50,6 +56,12 @@ export default async function HymnDetailPage({ params }: { params: { id: string 
           <ArrowLeft size={16} />
           回詩歌列表
         </a>
+        {allowedToEdit ? (
+          <a className="button primary" href={`/admin/hymns/${hymn.id}`}>
+            <Edit3 size={16} />
+            編輯
+          </a>
+        ) : null}
         <h1>{hymn.name_zh || hymn.name_en}</h1>
         <p>#{hymn.id}</p>
         <div className="pillRow">
@@ -64,7 +76,7 @@ export default async function HymnDetailPage({ params }: { params: { id: string 
       <section className="detailLayout">
         <article className="panel">
           <h2>歌詞</h2>
-          {hymn.lyrics ? <pre className="lyrics">{hymn.lyrics}</pre> : <p>尚未填入歌詞。</p>}
+          {lyrics ? <pre className="lyrics">{lyrics}</pre> : <p>尚未填入歌詞。</p>}
         </article>
 
         <aside style={{ display: "grid", gap: 16 }}>

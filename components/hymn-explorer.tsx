@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Search, Languages } from "lucide-react";
 import { copy, normalizeLocale } from "@/lib/i18n";
+import { formatEscapedText, previewText } from "@/lib/text";
 import type { Category, Hymn, Locale } from "@/lib/types";
 
 function splitTokens(value: string) {
@@ -31,7 +32,7 @@ export function HymnExplorer({ hymns, categories }: { hymns: Hymn[]; categories:
         hymn.id,
         hymn.name_zh,
         hymn.name_en,
-        hymn.lyrics,
+        formatEscapedText(hymn.lyrics),
         hymn.tags,
         hymn.album,
         hymn.composer,
@@ -99,7 +100,7 @@ export function HymnExplorer({ hymns, categories }: { hymns: Hymn[]; categories:
                   {hymn.album ? ` · ${hymn.album}` : ""}
                 </p>
               </div>
-              <p>{hymn.lyrics ? hymn.lyrics.slice(0, 92) : hymn.tags || hymn.composer || "尚待補充詩歌資料"}</p>
+              <p>{hymn.lyrics ? previewText(hymn.lyrics) : hymn.tags || hymn.composer || "尚待補充詩歌資料"}</p>
               <div className="pillRow">
                 {splitTokens(hymn.categories)
                   .slice(0, 3)

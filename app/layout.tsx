@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Music2 } from "lucide-react";
+import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { copy } from "@/lib/i18n";
@@ -23,7 +23,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <header className="topbar">
             <a className="brand" href="/">
               <span className="brandMark" aria-hidden="true">
-                <Music2 size={22} />
+                <Image alt="" height={44} priority src="/brand/linkou-baptist-logo-blue-cropped.png" width={55} />
               </span>
               <span className="brandText">
                 <strong>{t.shortTitle}</strong>

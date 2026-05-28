@@ -3,14 +3,14 @@ import { getServerSession } from "next-auth";
 import { HymnForm } from "@/components/hymn-form";
 import { authOptions } from "@/lib/auth";
 import { hasSheetsConfig } from "@/lib/config";
-import { getHymns, isAdmin } from "@/lib/sheets";
+import { getCategories, getHymns, isAdmin } from "@/lib/sheets";
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
   const allowed = await isAdmin(session?.user?.email);
   if (!allowed) redirect("/api/auth/signin");
 
-  const hymns = await getHymns();
+  const [hymns, categories] = await Promise.all([getHymns(), getCategories()]);
 
   return (
     <>
@@ -25,7 +25,7 @@ export default async function AdminPage() {
         </section>
       ) : null}
 
-      <HymnForm />
+      <HymnForm categories={categories} />
 
       <section className="panel" style={{ marginTop: 20 }}>
         <h2>現有詩歌</h2>
@@ -45,8 +45,8 @@ export default async function AdminPage() {
                 <td>{hymn.name_zh || hymn.name_en}</td>
                 <td>{hymn.categories}</td>
                 <td>
-                  <a className="button" href={`/hymns/${hymn.id}`}>
-                    檢視
+                  <a className="button" href={`/admin/hymns/${hymn.id}`}>
+                    編輯
                   </a>
                 </td>
               </tr>

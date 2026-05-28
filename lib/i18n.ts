@@ -2,7 +2,7 @@ import type { Locale } from "@/lib/types";
 
 export const copy = {
   zh: {
-    title: "林口浸信會 HymnLink 詩歌管理系統",
+    title: "林口浸信會 詩歌管理系統",
     shortTitle: "HymnLink",
     subtitle: "查詢詩歌、歌詞、YouTube 與樂譜連結",
     search: "搜尋詩歌、歌詞、標籤",
